@@ -1,10 +1,10 @@
 package ru.eltex;
 
-public class Sales {
+public class Sale {
     private String[] items;
     private Double cost;
 
-    public Sales(String[] items, Double cost) {
+    public Sale(String[] items, Double cost) {
         this.items = items;
         this.cost = cost;
     }
