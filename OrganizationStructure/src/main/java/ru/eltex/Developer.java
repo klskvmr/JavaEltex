@@ -16,8 +16,17 @@ public class Developer extends User {
         this.languages = languages;
     }
 
+    public String languagesToString(String[] languages) {
+        String string = "";
+
+        for (String language : languages) {
+            string += language + " ";
+        }
+        return string;
+    }
+
     public String toCSV() {
-        return this.getFio() + ";" + this.getNumber() + ";" + this.getEmail() + ";" + this.languagesToString(languages) + "\n";
+        return this.getFio() + ";" + this.getNumber() + ";" + this.getEmail() + ";" + this.languagesToString(languages) + System.lineSeparator();
     }
 
     public void fromCSV(String stringFromCVS) {
@@ -27,14 +36,5 @@ public class Developer extends User {
         String[] languagesArray = stringsArray[stringsArray.length - 1].split(",");
 
         this.languages = languagesArray;
-    }
-
-    public String languagesToString(String[] languages) {
-        String string = "";
-
-        for (String language : languages) {
-            string += language + " ";
-        }
-        return string;
     }
 }
