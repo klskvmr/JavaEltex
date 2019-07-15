@@ -63,7 +63,7 @@ set CMD_LINE_ARGS=%*
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\OrganizationStructure.jar
+set CLASSPATH=%APP_HOME%\lib\OrganizationStructure.jar;%APP_HOME%\lib\a.jar;%APP_HOME%\lib\b.jar;%APP_HOME%\lib\jackson-mapper-asl-1.9.11.jar;%APP_HOME%\lib\jackson-core-asl-1.9.11.jar
 
 @rem Execute OrganizationStructure
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ORGANIZATION_STRUCTURE_OPTS%  -classpath "%CLASSPATH%" ru.eltex.OrganizationStructure %CMD_LINE_ARGS%

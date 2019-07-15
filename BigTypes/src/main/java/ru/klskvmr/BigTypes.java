@@ -1,5 +1,7 @@
-package ru.eltex;
+package ru.klskvmr;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class BigTypes {
@@ -7,9 +9,14 @@ public class BigTypes {
         //Integer a = 4;
         //BigInteger b = new BigInteger(a);
 
-        BigInteger c = BigInteger.valueOf(1000000);
-        BigInteger d = BigInteger.valueOf(1000000);
-        BigInteger result = Math.pow(2, BigInteger.valueOf(1000000))
+        BigInteger a = new BigInteger("2");
+        BigInteger result = a.pow(1000);
+
+        try (FileWriter fw = new FileWriter("src/main/resources/bigTypes.txt")){
+
+        }catch (IOException error){
+            System.out.println(error);
+        }
 
     }
 }

@@ -1,11 +1,19 @@
 package ru.eltex;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
+
 public class Manager extends User {
     private Sale[] sales;
 
-    public Manager(String fio, String number, String email, Sale[] sales) {
-        super(fio, number, email);
+    public Manager(Integer index, String fio, String number, String email, Sale[] sales) {
+        super(index, fio, number, email);
         this.sales = sales;
+    }
+
+    public Manager() {
     }
 
     public Sale[] getSales() {
@@ -16,25 +24,30 @@ public class Manager extends User {
         this.sales = sales;
     }
 
-    public String salesToString(Sale[] sales){
+    private String getSalesInString() {
         String string = "";
 
-        for (int i = 0; i < sales.length; i++){
-            String[] items = sales[i].getItems();
+        for (int i = 0; i < this.sales.length; i++) {
+            String[] items = this.sales[i].getItems();
 
-            for(int j = 0; j< items.length; j++){
+            for (int j = 0; j < items.length; j++) {
                 string += items[j] + "@";
             }
 
-            string += " " + sales[i].getCost();
+            string += " " + this.sales[i].getCost();
 
-            string += ",";
+            if (i == this.sales.length - 1) {
+                break;
+            } else {
+
+                string += ",";
+            }
         }
         return string;
     }
 
     public String toCSV() {
-        return this.getFio() + ";" + this.getNumber() + ";" + this.getEmail() + ";" + salesToString(this.getSales()) + System.lineSeparator();
+        return this.getId() + ";" + this.getFio() + ";" + this.getNumber() + ";" + this.getEmail() + ";" + this.getSalesInString() + System.lineSeparator();
     }
 
     public void fromCSV(String stringFromCVS) {
@@ -60,5 +73,26 @@ public class Manager extends User {
         }
 
         this.sales = resultSalesArray;
+    }
+
+    @Override
+    public String toJSON() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(new File("managers.json"), this);
+
+        return objectMapper.writeValueAsString(this);
+    }
+
+    @Override
+    public void fromJSON(String string) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Manager manager = objectMapper.readValue(new File("developers.json"), Manager.class);
+
+        this.setId(manager.getId());
+        this.setFio(manager.getFio());
+        this.setNumber(manager.getNumber());
+        this.setEmail(manager.getEmail());
+        this.setSales(manager.getSales());
     }
 }

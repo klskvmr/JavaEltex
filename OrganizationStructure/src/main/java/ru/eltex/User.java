@@ -1,14 +1,23 @@
 package ru.eltex;
 
-public abstract class User implements CSV {
+public abstract class User implements CSV, JSON {
+    private Integer id;
     private String fio;
     private String number;
     private String email;
 
-    public User(String fio, String number, String email) {
+    public User(Integer id, String fio, String number, String email) {
+        this.id = id;
         this.fio = fio;
         this.number = number;
         this.email = email;
+    }
+
+    public User() {
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getFio() {
@@ -21,6 +30,10 @@ public abstract class User implements CSV {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setFio(String fio) {
@@ -36,14 +49,15 @@ public abstract class User implements CSV {
     }
 
     public String toCSV() {
-        return this.fio + ";" + this.number + ";" + this.email;
+        return this.id + " " + this.fio + ";" + this.number + ";" + this.email;
     }
 
     public void fromCVS(String stringFromCVS) {
         String[] stringsArray = stringFromCVS.split(";");
 
-        this.fio = stringsArray[0];
-        this.number = stringsArray[1];
-        this.email = stringsArray[2];
+        this.id = Integer.parseInt(stringsArray[0]);
+        this.fio = stringsArray[1];
+        this.number = stringsArray[2];
+        this.email = stringsArray[3];
     }
 }

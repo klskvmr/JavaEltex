@@ -64,7 +64,7 @@ case "`uname`" in
     ;;
 esac
 
-CLASSPATH=$APP_HOME/lib/OrganizationStructure.jar
+CLASSPATH=$APP_HOME/lib/OrganizationStructure.jar:$APP_HOME/lib/a.jar:$APP_HOME/lib/b.jar:$APP_HOME/lib/jackson-mapper-asl-1.9.11.jar:$APP_HOME/lib/jackson-core-asl-1.9.11.jar
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
