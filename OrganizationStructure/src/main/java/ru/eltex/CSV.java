@@ -1,7 +1,12 @@
 package ru.eltex;
 
-public interface CSV {
-    String toCSV();
+import lombok.SneakyThrows;
 
-    void fromCSV(String string);
+import java.io.IOException;
+import java.text.ParseException;
+
+public interface CSV {
+    String toCSV() throws IOException;
+
+    void fromCSV(String string) throws IOException, TypeException, ParseException;
 }

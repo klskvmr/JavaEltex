@@ -1,146 +1,203 @@
 package ru.eltex;
 
+import lombok.Cleanup;
+import lombok.SneakyThrows;
+
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class OrganizationStructure {
-    public static void main(String[] args) throws IOException {
-        ArrayList<Developer> developers = new ArrayList<Developer>();
-        ArrayList<Manager> managers = new ArrayList<Manager>();
+    public static void main(String[] args) {
+
+        Manager manager = new Manager();
+        Class cl = manager.getClass();
+        People pl = (People) cl.getAnnotation(People.class);
+
+
+        removeAndCreateTables();
+
+        ArrayList<Developer> developers = new ArrayList<>();
+        ArrayList<Manager> managers = new ArrayList<>();
+
+        developers = getArrayListOfDevelopers();
+        managers = getArrayListOfManagers();
+
+        writeDevelopersToJSON("developersToSql.json", developers);
+        writeManagersToJSON("managersToSql.json", managers);
+
+        DUMP.developersFromJSON("developersToSql.json");
+        DUMP.managersFromJson("managersToSql.json");
+
+        DUMP.developersToJson("developers.json");
+        DUMP.managersToJson("managers.json");
+
+//        Union.getUnion();
+
+        //writeDevelopersToJSON(developers);
+        //readDevelopersFromJSON(developers);
+        //writeDevelopersCSV(developers);
+        //readDevelopersFromCSV(developers); System.out.println();
+        //writeManagersToJSON(managers);
+        //readManagersFromJSON(managers);
+        //writeManagersToCSV(managers);
+        //readManagersFromCSV(managers);
+
+        //printDevelopers(developers);
+        //printManagers(managers);
+    }
+
+    @SneakyThrows(SQLException.class)
+    public static void removeAndCreateTables() {
+        @Cleanup Connection connection = DriverManager.getConnection(Authorization.HOST, Authorization.LOGIN, Authorization.PASSWORD); //соединение с БД
+        Statement statement = connection.createStatement();
+        statement.execute("DROP TABLE IF EXISTS developer;");
+        statement.execute("DROP TABLE IF EXISTS manager;");
+        statement.execute("CREATE TABLE developer (id INT NOT NULL AUTO_INCREMENT, fio VARCHAR(45), number VARCHAR(12), email VARCHAR(30),  languages VARCHAR(45), PRIMARY KEY(id));");
+        statement.execute("CREATE TABLE manager (id INT NOT NULL AUTO_INCREMENT, fio VARCHAR(45), number VARCHAR(12), email VARCHAR(30),  sales VARCHAR(50),  PRIMARY KEY(id));");
+    }
+
+    private static void checkCompare() {
+        Manager manager = new Manager(1, "Alex", "911", "apple@gmail.com", new Sale[]{new Sale(new String[]{"iphone", "ipad", "mac"}, 377771.1)});
+        Manager manager1 = new Manager(1, "Jobs", "911", "apple@gmail.com", new Sale[]{new Sale(new String[]{"iphone", "ipad", "mac"}, 377771.1)});
+
+        Developer developer = new Developer(1, "Jobs", "911", "apple@gmail.com", new String[]{"Java"});
+
+        translateCompare(manager1.compareTo(developer));
+    }
+
+    private static void translateCompare(int number) {
+        if (number == 0) {
+            System.out.println("Users are equal");
+        } else if (number > 0) {
+            System.out.println("User 1 > User 2");
+        } else {
+            System.out.println("User 1 < User 2");
+        }
+    }
+
+    private static ArrayList<Developer> getArrayListOfDevelopers() {
+        ArrayList<Developer> developers = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             developers.add(new Developer(i, "Elon Mask" + i, "90" + i, i + "@gmail.com", new String[]{"Java", "C#"}));
         }
+        return developers;
+    }
+
+    private static ArrayList<Manager> getArrayListOfManagers() {
+        ArrayList<Manager> managers = new ArrayList<Manager>();
 
         for (int i = 0; i < 10; i++) {
             managers.add(new Manager(i, "Victor Pelevin" + i, "97" + i, i + "@gmail.com", new Sale[]{
                     new Sale(new String[]{"item1", "item2", "item3"}, 600.5 + i), new Sale(new String[]{"item4", "item5", "item6"}, 700.5 + i)}));
         }
-
-        //writeDevelopersToJSON(developers);
-        readDevelopersFromJSON(developers);
-
-        //writeDevelopersCSV(developers);
-        //readDevelopersFromCSV(developers);
-
-        System.out.println();
-
-        //writeManagersToJSON(managers);
-        readManagersFromJSON(managers);
-
-        //writeManagersToCSV(managers);
-        //readManagersFromCSV(managers);
-
-        printDevelopers(developers);
-        printManagers(managers);
+        return managers;
     }
 
+    @SneakyThrows(IOException.class)
     private static void writeDevelopersToCSV(ArrayList<Developer> developers) {
-        try (FileWriter fw = new FileWriter("developers.csv")) {
-            for (Developer developer : developers) {
-                fw.write(developer.toCSV());
-            }
+        @Cleanup FileWriter fw = new FileWriter("developers.csv");
 
-            fw.flush();
-        } catch (IOException error) {
-            System.err.println(error.getMessage());
+        for (Developer developer : developers) {
+            fw.write(developer.toCSV());
         }
+
+        fw.flush();
     }
 
+    @SneakyThrows(IOException.class)
     private static void writeManagersToCSV(ArrayList<Manager> managers) {
-        try (FileWriter fw = new FileWriter("managers.csv")) {
-            for (Manager manager : managers) {
-                fw.write(manager.toCSV());
-            }
+        @Cleanup FileWriter fw = new FileWriter("managers.csv");
 
-            fw.flush();
-        } catch (IOException error) {
-            System.err.println(error.getMessage());
+        for (Manager manager : managers) {
+            fw.write(manager.toCSV());
         }
+        fw.flush();
     }
 
-    private static void writeDevelopersToJSON(ArrayList<Developer> developers) {
-        try (FileWriter fw = new FileWriter("developers.json")) {
-            for (Developer developer : developers) {
-                fw.write(developer.toJSON());
-                fw.write("\n");
-            }
-            fw.flush();
-        } catch (IOException error) {
-            System.out.println(error.getMessage());
+    @SneakyThrows(IOException.class)
+    private static void writeDevelopersToJSON(String filename, ArrayList<Developer> developers) {
+        @Cleanup FileWriter fw = new FileWriter(filename);
+        for (Developer developer : developers) {
+            fw.write(developer.toJSON(filename));
+            fw.write("\n");
         }
+        fw.flush();
     }
 
-    private static void writeManagersToJSON(ArrayList<Manager> managers) {
-        try (FileWriter fw = new FileWriter("managers.json")) {
-            for (Manager manager : managers) {
-                fw.write(manager.toJSON());
-            }
-            fw.flush();
-        } catch (IOException error) {
-            System.err.println(error.getMessage());
+    @SneakyThrows(IOException.class)
+    private static void writeManagersToJSON(String filename, ArrayList<Manager> managers) {
+        @Cleanup FileWriter fw = new FileWriter(filename);
+        for (Manager manager : managers) {
+            fw.write(manager.toJSON(filename));
+            fw.write("\n");
         }
-
+        fw.flush();
     }
 
+    @SneakyThrows(IOException.class)
     private static ArrayList<Developer> readDevelopersFromCSV(ArrayList<Developer> developers) {
         developers.clear();
 
-        try (FileReader fr = new FileReader("developers.csv"); Scanner readFile = new Scanner(fr)) {
-            while (readFile.hasNextLine()) {
-                Developer developer = new Developer();
-                developer.fromCSV(readFile.nextLine());
+        @Cleanup FileReader fr = new FileReader("developers.csv");
+        @Cleanup Scanner readFile = new Scanner(fr);
 
-                developers.add(developer);
-            }
-        } catch (IOException error) {
-            System.err.println(error.getMessage());
+        while (readFile.hasNextLine()) {
+            Developer developer = new Developer();
+            developer.fromCSV(readFile.nextLine());
+
+            developers.add(developer);
         }
 
         return developers;
     }
 
-    private static ArrayList<Manager> readManagersFromCSV(ArrayList<Manager> managers) {
+    @SneakyThrows(IOException.class)
+    private static ArrayList<Manager> readManagersFromCSV(ArrayList<Manager> managers) throws TypeException {
         managers.clear();
 
-        try (Scanner readFile = new Scanner(new FileInputStream("managers.csv"))) {
-            while (readFile.hasNextLine()) {
-                Manager manager = new Manager();
-                manager.fromCSV(readFile.nextLine());
-
-                managers.add(manager);
-            }
-
-        } catch (IOException error) {
-            System.err.println(error.getMessage());
+        @Cleanup Scanner readFile = new Scanner(new FileInputStream("managers.csv"));
+        while (readFile.hasNextLine()) {
+            Manager manager = new Manager();
+            manager.fromCSV(readFile.nextLine());
+            managers.add(manager);
         }
 
         return managers;
     }
 
+    @SneakyThrows(IOException.class)
     public static ArrayList<Developer> readDevelopersFromJSON(ArrayList<Developer> developers) {
         developers.clear();
 
-        try (Scanner inputFile = new Scanner(new FileInputStream("developers.json"))) {
-            while (inputFile.hasNextLine()) {
-                Developer developer = new Developer();
-                developer.fromJSON(inputFile.nextLine());
+        @Cleanup Scanner inputFile = new Scanner(new FileInputStream("developers.json"));
+        while (inputFile.hasNextLine()) {
+            Developer developer = new Developer();
+            developer.fromJSON(inputFile.nextLine());
 
-                developers.add(developer);
-            }
-        } catch (IOException error) {
-            System.err.println(error.getMessage());
+            developers.add(developer);
         }
 
         return developers;
     }
 
-    public static ArrayList<Manager> readManagersFromJSON (ArrayList<Manager> managers){
+    @SneakyThrows(IOException.class)
+    public static ArrayList<Manager> readManagersFromJSON(ArrayList<Manager> managers) {
         managers.clear();
+
+        @Cleanup Scanner inputFile = new Scanner(new FileInputStream("managers.json"));
+        while (inputFile.hasNextLine()) {
+            Manager manager = new Manager();
+            manager.fromJSON(inputFile.nextLine());
+
+            managers.add(manager);
+        }
+
         return managers;
     }
 

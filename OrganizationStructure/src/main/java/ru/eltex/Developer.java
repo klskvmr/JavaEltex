@@ -1,11 +1,19 @@
 package ru.eltex;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
 
+@ToString
+
+@NoArgsConstructor
+
 public class Developer extends User {
+    @Getter
+    @Setter
     private String[] languages;
 
     public Developer(Integer index, String fio, String number, String email, String[] languages) {
@@ -13,19 +21,14 @@ public class Developer extends User {
         this.languages = languages;
     }
 
-    public Developer() {
-    }
-
-    public String[] getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(String[] languages) {
+    public Developer(String fio, String number, String email, String[] languages) {
+        super(fio, number, email);
         this.languages = languages;
     }
 
-    private String getLanguagesInString() {
+    protected String getLanguagesInString() {
         String string = "";
+
 
         for (String language : this.languages) {
             string += language + " ";
@@ -46,17 +49,16 @@ public class Developer extends User {
         this.languages = languagesArray;
     }
 
-    public String toJSON() throws IOException {
+    public String toJSON(String filename) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("developers.json"), this);
-
+        objectMapper.writeValue(new File(filename), this);
         return objectMapper.writeValueAsString(this);
     }
 
     public void fromJSON(String string) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Developer developer = objectMapper.readValue(new File("developers.json"), Developer.class);
+        Developer developer = objectMapper.readValue(string, Developer.class);
 
         this.setId(developer.getId());
         this.setFio(developer.getFio());

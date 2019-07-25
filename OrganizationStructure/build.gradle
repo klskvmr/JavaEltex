@@ -1,7 +1,10 @@
 apply plugin: 'java'
 apply plugin: "application"
 mainClassName = "ru.eltex.OrganizationStructure"
-run { standardInput = System.in }
+
+run {
+    standardInput = System.in
+}
 
 repositories {
     mavenCentral()
@@ -9,10 +12,14 @@ repositories {
 
 dependencies {
     compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
-    compile files('libs/a.jar', 'libs/b.jar')
     compile fileTree(dir: 'libs', include: '*.jar')
 }
-// кэширование
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 4, 'hours'
+
+dependencies {
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.12'
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }

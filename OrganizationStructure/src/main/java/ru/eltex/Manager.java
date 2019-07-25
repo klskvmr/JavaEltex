@@ -1,11 +1,17 @@
 package ru.eltex;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
 
+@NoArgsConstructor
 public class Manager extends User {
+    @Getter
+    @Setter
     private Sale[] sales;
 
     public Manager(Integer index, String fio, String number, String email, Sale[] sales) {
@@ -13,18 +19,12 @@ public class Manager extends User {
         this.sales = sales;
     }
 
-    public Manager() {
-    }
-
-    public Sale[] getSales() {
-        return sales;
-    }
-
-    public void setSales(Sale[] sales) {
+    public Manager(String fio, String number, String email, Sale[] sales) {
+        super(fio, number, email);
         this.sales = sales;
     }
 
-    private String getSalesInString() {
+    protected String getSalesInString() {
         String string = "";
 
         for (int i = 0; i < this.sales.length; i++) {
@@ -46,39 +46,53 @@ public class Manager extends User {
         return string;
     }
 
+    @Override
     public String toCSV() {
         return this.getId() + ";" + this.getFio() + ";" + this.getNumber() + ";" + this.getEmail() + ";" + this.getSalesInString() + System.lineSeparator();
     }
 
-    public void fromCSV(String stringFromCVS) {
+    @Override
+    public void fromCSV(String stringFromCVS) throws TypeException {
         super.fromCVS(stringFromCVS);
 
         String[] stringsFromCVSArray = stringFromCVS.split(";"); // массив из всех все данных
 
-        String[] salesArray = stringsFromCVSArray[stringsFromCVSArray.length - 1].split(","); // массив продаж Sales
-
-        Sale[] resultSalesArray = new Sale[salesArray.length]; //
-
-        Integer counter = 0;
-        for (String sale : salesArray) {
-            String[] saleComponentsArray = sale.split(" "); // массив из составляющих одной продажи
-
-            Double cost = Double.parseDouble(saleComponentsArray[1]);
-
-            String[] itemsArray = saleComponentsArray[0].split("@");
-
-            resultSalesArray[counter] = new Sale(itemsArray, cost);
-
-            counter++;
+        if (stringsFromCVSArray.length != 5) {
+            throw new TypeException("NOT MANAGER");
         }
 
-        this.sales = resultSalesArray;
+        String[] salesArray = stringsFromCVSArray[stringsFromCVSArray.length - 1].split(","); // массив из Sales
+
+        Sale[] resultSalesArray = new Sale[salesArray.length];
+        try {
+            Integer counter = 0;
+            for (String sale : salesArray) {
+                String[] saleComponentsArray = sale.split(" "); // массив из составляющих одной продажи
+
+                if (saleComponentsArray.length == 0) {
+                    throw new TypeException("NOT MANAGER");
+                }
+
+                String[] itemsArray = saleComponentsArray[0].split("@");
+
+                resultSalesArray[counter] = new Sale(itemsArray, Double.parseDouble(saleComponentsArray[1]));
+
+
+                counter++;
+            }
+
+            sales = resultSalesArray;
+
+        } catch (NumberFormatException error) {
+            System.out.println(error.getMessage());
+            throw new TypeException("NOT MANAGER");
+        }
     }
 
     @Override
-    public String toJSON() throws IOException {
+    public String toJSON(String filename) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("managers.json"), this);
+        objectMapper.writeValue(new File(filename), this);
 
         return objectMapper.writeValueAsString(this);
     }
@@ -87,7 +101,7 @@ public class Manager extends User {
     public void fromJSON(String string) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Manager manager = objectMapper.readValue(new File("developers.json"), Manager.class);
+        Manager manager = objectMapper.readValue(string, Manager.class);
 
         this.setId(manager.getId());
         this.setFio(manager.getFio());
