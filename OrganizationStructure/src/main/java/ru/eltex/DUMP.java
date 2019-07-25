@@ -111,6 +111,30 @@ public class DUMP {
     }
 
     @SneakyThrows(IOException.class)
+    public static void developersFromCSV(String filename) {
+        @Cleanup Scanner inputFile = new Scanner(new FileInputStream(filename));
+
+        while (inputFile.hasNextLine()) {
+            Developer developer = new Developer();
+            developer.fromCSV(inputFile.nextLine());
+
+            developerToSQL(developer);
+        }
+    }
+
+    @SneakyThrows({IOException.class, TypeException.class})
+    public static void managersFromCSV(String filename) {
+        @Cleanup Scanner inputFile = new Scanner(new FileInputStream(filename));
+
+        while (inputFile.hasNextLine()){
+            Manager manager = new Manager();
+            manager.fromCSV(inputFile.nextLine());
+
+            managerToSQL(manager);
+        }
+    }
+
+    @SneakyThrows(IOException.class)
     public static void developersFromJSON(String filename) {
         @Cleanup Scanner inputFile = new Scanner(new FileInputStream(filename));
 
@@ -118,7 +142,7 @@ public class DUMP {
             Developer developer = new Developer();
             developer.fromJSON(inputFile.nextLine());
 
-            DUMP.developerToSQL(developer);
+            developerToSQL(developer);
         }
     }
 
@@ -158,6 +182,28 @@ public class DUMP {
         for (Manager manager : managers) {
             fw.write(manager.toJSON(filename));
             fw.write("\n");
+        }
+        fw.flush();
+    }
+
+    @SneakyThrows(IOException.class)
+    public static void developersToCSV(String filename) {
+        @Cleanup FileWriter fw = new FileWriter(filename);
+
+        ArrayList<Developer> developers = DUMP.developersFromSQL();
+        for (Developer developer : developers) {
+            fw.write(developer.toCSV());
+        }
+        fw.flush();
+    }
+
+    @SneakyThrows({IOException.class, TypeException.class})
+    public static void managersToCSV(String filename) {
+        @Cleanup FileWriter fw = new FileWriter(filename);
+
+        ArrayList<Manager> managers = DUMP.managersFromSQL();
+        for (Manager manager : managers) {
+            fw.write(manager.toCSV());
         }
         fw.flush();
     }

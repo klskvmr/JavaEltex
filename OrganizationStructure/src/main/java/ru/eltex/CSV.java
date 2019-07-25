@@ -8,5 +8,5 @@ import java.text.ParseException;
 public interface CSV {
     String toCSV() throws IOException;
 
-    void fromCSV(String string) throws IOException, TypeException, ParseException;
+    void fromCSV(String stringFromCsv) throws IOException, TypeException, ParseException;
 }

@@ -14,9 +14,9 @@ import java.util.Scanner;
 public class OrganizationStructure {
     public static void main(String[] args) {
 
-        Manager manager = new Manager();
-        Class cl = manager.getClass();
-        People pl = (People) cl.getAnnotation(People.class);
+//        Manager manager = new Manager();
+//        Class cl = manager.getClass();
+//        People pl = (People) cl.getAnnotation(People.class);
 
 
         removeAndCreateTables();
@@ -24,17 +24,21 @@ public class OrganizationStructure {
         ArrayList<Developer> developers = new ArrayList<>();
         ArrayList<Manager> managers = new ArrayList<>();
 
-        developers = getArrayListOfDevelopers();
-        managers = getArrayListOfManagers();
+//        developers = getArrayListOfDevelopers();
+//        managers = getArrayListOfManagers();
 
-        writeDevelopersToJSON("developersToSql.json", developers);
-        writeManagersToJSON("managersToSql.json", managers);
 
-        DUMP.developersFromJSON("developersToSql.json");
-        DUMP.managersFromJson("managersToSql.json");
+        DUMP.developersFromCSV("developers.csv");
+        DUMP.managersFromCSV("managers.csv");
 
-        DUMP.developersToJson("developers.json");
-        DUMP.managersToJson("managers.json");
+//        writeDevelopersToJSON("developersToSql.json", developers);
+//        writeManagersToJSON("managersToSql.json", managers);
+//
+//        DUMP.developersFromJSON("developersToSql.json");
+//        DUMP.managersFromJson("managersToSql.json");
+//
+//        DUMP.developersToJson("developers.json");
+//        DUMP.managersToJson("managers.json");
 
 //        Union.getUnion();
 

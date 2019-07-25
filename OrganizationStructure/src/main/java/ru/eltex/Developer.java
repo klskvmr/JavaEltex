@@ -55,10 +55,10 @@ public class Developer extends User {
         return objectMapper.writeValueAsString(this);
     }
 
-    public void fromJSON(String string) throws IOException {
+    public void fromJSON(String filename) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Developer developer = objectMapper.readValue(string, Developer.class);
+        Developer developer = objectMapper.readValue(filename, Developer.class);
 
         this.setId(developer.getId());
         this.setFio(developer.getFio());
