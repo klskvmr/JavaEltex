@@ -4,14 +4,20 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.File;
 import java.io.IOException;
 
 @ToString
-
 @NoArgsConstructor
 
+@Entity
 public class Developer extends User {
+    @Id
+    @GeneratedValue
+
     @Getter
     @Setter
     private String[] languages;

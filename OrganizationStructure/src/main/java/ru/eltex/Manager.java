@@ -5,11 +5,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.File;
 import java.io.IOException;
 
 @NoArgsConstructor
+
+@Entity
 public class Manager extends User {
+    @Id
+    @GeneratedValue
+
     @Getter
     @Setter
     private Sale[] sales;

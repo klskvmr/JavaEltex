@@ -1,4 +1,4 @@
-{"id":0,"fio":"Victor Pelevin0","number":"970","email":"0@gmail.com","sales":[{"items":["item1","item2","item3"],"cost":600.5},{"items":["item4","item5","item6"],"cost":700.5}]}
+{"id":0,"fio":"Victor Pelevin0","number":"970","email":"88888@gmail.com","sales":[{"items":["item1","item5","item3"],"cost":600.5}]}
 {"id":1,"fio":"Victor Pelevin1","number":"971","email":"1@gmail.com","sales":[{"items":["item1","item2","item3"],"cost":601.5},{"items":["item4","item5","item6"],"cost":701.5}]}
 {"id":2,"fio":"Victor Pelevin2","number":"972","email":"2@gmail.com","sales":[{"items":["item1","item2","item3"],"cost":602.5},{"items":["item4","item5","item6"],"cost":702.5}]}
 {"id":3,"fio":"Victor Pelevin3","number":"973","email":"3@gmail.com","sales":[{"items":["item1","item2","item3"],"cost":603.5},{"items":["item4","item5","item6"],"cost":703.5}]}

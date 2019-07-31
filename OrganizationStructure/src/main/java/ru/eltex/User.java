@@ -2,11 +2,22 @@ package ru.eltex;
 
 import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 @People(mass = 50, age = 23, sex = 1)
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
+
+@Entity
 public abstract class User implements CSV, JSON, Comparable<User> {
+    @Id
+    @GeneratedValue
+
     private Integer id;
     private String fio;
     private String number;

@@ -18,41 +18,43 @@ public class OrganizationStructure {
 //        Class cl = manager.getClass();
 //        People pl = (People) cl.getAnnotation(People.class);
 
-
         removeAndCreateTables();
 
-        ArrayList<Developer> developers = new ArrayList<>();
-        ArrayList<Manager> managers = new ArrayList<>();
+//        ArrayList<Developer> developers = new ArrayList<>();
+//        ArrayList<Manager> managers = new ArrayList<>();
 
 //        developers = getArrayListOfDevelopers();
 //        managers = getArrayListOfManagers();
 
-
-        DUMP.developersFromCSV("developers.csv");
-        DUMP.managersFromCSV("managers.csv");
+//        DUMP.developersFromCSV("developers.csv");
+//        DUMP.managersFromCSV("managers.csv");
 
 //        writeDevelopersToJSON("developersToSql.json", developers);
 //        writeManagersToJSON("managersToSql.json", managers);
 //
-//        DUMP.developersFromJSON("developersToSql.json");
-//        DUMP.managersFromJson("managersToSql.json");
+        DUMP.developersFromJSON("developersToSql.json");
+        DUMP.managersFromJson("managersToSql.json");
 //
 //        DUMP.developersToJson("developers.json");
 //        DUMP.managersToJson("managers.json");
 
-//        Union.getUnion();
+//        SQL.getUnion();
+        SQL sql = new SQL();
+        sql.getSecondViewDevelopers();
 
-        //writeDevelopersToJSON(developers);
-        //readDevelopersFromJSON(developers);
-        //writeDevelopersCSV(developers);
-        //readDevelopersFromCSV(developers); System.out.println();
-        //writeManagersToJSON(managers);
-        //readManagersFromJSON(managers);
-        //writeManagersToCSV(managers);
-        //readManagersFromCSV(managers);
+        sql.getSecondViewManagers();
 
-        //printDevelopers(developers);
-        //printManagers(managers);
+//        writeDevelopersToJSON(developers);
+//        readDevelopersFromJSON(developers);
+//        writeDevelopersCSV(developers);
+//        readDevelopersFromCSV(developers); System.out.println();
+//        writeManagersToJSON(managers);
+//        readManagersFromJSON(managers);
+//        writeManagersToCSV(managers);
+//        readManagersFromCSV(managers);
+//
+//        printDevelopers(developers);
+//        printManagers(managers);
     }
 
     @SneakyThrows(SQLException.class)
