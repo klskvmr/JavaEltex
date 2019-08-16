@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
+apply plugin: 'java'
+apply plugin: "application"
+
+mainClassName='ru.eltex.koloskova.sample.App'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+javafx {
+    version = "12.0.1"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.12'
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    compile 'mysql:mysql-connector-java:8.0.17'
+    implementation 'org.hibernate:hibernate-core:5.4.3.Final'
+
+    compile group: 'io.vertx', name: 'vertx-core', version: '3.8.0'
+}
